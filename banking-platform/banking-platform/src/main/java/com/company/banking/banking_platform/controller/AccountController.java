@@ -2,6 +2,7 @@ package com.company.banking.banking_platform.controller;
 
 
 
+import com.company.banking.banking_platform.dto.AccountSummaryResponse;
 import com.company.banking.banking_platform.dto.CreateAccountRequest;
 import com.company.banking.banking_platform.entity.Account;
 import com.company.banking.banking_platform.service.AccountService;
@@ -19,6 +20,10 @@ public class AccountController {
     @PostMapping
     public Account createAccount(@Valid @RequestBody CreateAccountRequest request) {
         return accountService.createAccount(request);
+    }
+    @GetMapping("/{accountId}/summary")
+    public AccountSummaryResponse getSummary(@PathVariable Long accountId) {
+        return accountService.getAccountSummary(accountId);
     }
 }
 

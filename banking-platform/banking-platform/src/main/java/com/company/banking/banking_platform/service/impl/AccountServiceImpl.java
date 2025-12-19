@@ -2,7 +2,7 @@ package com.company.banking.banking_platform.service.impl;
 
 
 
-import com.company.banking.banking_platform.dto.CreateAccountRequest;
+import com.company.banking.banking_platform.dto.*;
 import com.company.banking.banking_platform.entity.Account;
 import com.company.banking.banking_platform.entity.User;
 import com.company.banking.banking_platform.exception.ResourceNotFoundException;
@@ -38,6 +38,18 @@ public class AccountServiceImpl implements AccountService {
                 .build();
 
         return accountRepository.save(account);
+    }
+    @Override
+    public AccountSummaryResponse getAccountSummary(Long accountId) {
+
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
+
+        return AccountSummaryResponse.builder()
+                .accountNumber(account.getAccountNumber())
+                .balance(account.getBalance())
+                .accountType(account.getAccountType().name())
+                .build();
     }
 }
 
