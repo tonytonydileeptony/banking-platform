@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private  UserRepository userRepository;
 
     @Override
     public User createUser(CreateUserRequest request) {
@@ -27,11 +27,11 @@ public class UserServiceImpl implements UserService {
                     throw new BadRequestException("Email already exists");
                 });
 
-        User user = User.builder()
-                .fullName(request.getFullName())
-                .email(request.getEmail())
-                .mobile(request.getMobile())
-                .build();
+        User user = new User();
+        user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
+        user.setMobile(request.getMobile());
+
 
         return userRepository.save(user);
     }
@@ -53,12 +53,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserResponse mapToResponse(User user) {
-        return UserResponse.builder()
-                .id(user.getId())
-                .fullName(user.getFullName())
-                .email(user.getEmail())
-                .mobile(user.getMobile())
-                .build();
+        UserResponse response = new UserResponse();
+        response.setId(user.getId());
+        response.setFullName(user.getFullName());
+        response.setEmail(user.getEmail());
+        response.setMobile(user.getMobile());
+   return response;
     }
 }
 

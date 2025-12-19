@@ -18,5 +18,29 @@ public class CreateUserRequest {
 
     @Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid mobile number")
     private String mobile;
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 }
 

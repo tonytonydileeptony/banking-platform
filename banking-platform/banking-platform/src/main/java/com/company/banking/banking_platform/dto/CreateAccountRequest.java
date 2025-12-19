@@ -18,4 +18,28 @@ public class CreateAccountRequest {
 
     @NotNull
     private BigDecimal initialBalance;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountType accountType) {
+        this.accountType = accountType;
+    }
+
+    public BigDecimal getInitialBalance() {
+        return initialBalance;
+    }
+
+    public void setInitialBalance(BigDecimal initialBalance) {
+        this.initialBalance = initialBalance;
+    }
 }

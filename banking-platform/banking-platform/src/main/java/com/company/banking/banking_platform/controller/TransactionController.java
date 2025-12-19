@@ -8,26 +8,28 @@ import com.company.banking.banking_platform.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/transactions")
+@RequestMapping("/api/v1/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
 
-    private final TransactionService transactionService;
+    private  TransactionService transactionService;
 
     @PostMapping("/deposit")
-    public String deposit(@Valid @RequestBody TransactionRequest request) {
+    public ResponseEntity<Void> deposit(@Valid @RequestBody TransactionRequest request) {
         transactionService.deposit(request);
-        return "Deposit successful";
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/withdraw")
-    public String withdraw(@Valid @RequestBody TransactionRequest request) {
+    public ResponseEntity<Void> withdraw(@Valid @RequestBody TransactionRequest request) {
         transactionService.withdraw(request);
-        return "Withdrawal successful";
+        return ResponseEntity.ok().build();
     }
+
     @GetMapping("/history/{accountId}")
     public Page<TransactionResponse> getHistory(
             @PathVariable Long accountId,

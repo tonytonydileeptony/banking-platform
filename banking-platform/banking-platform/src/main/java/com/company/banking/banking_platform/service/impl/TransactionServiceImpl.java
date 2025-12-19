@@ -23,8 +23,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
 
-    private final AccountRepository accountRepository;
-    private final TransactionRepository transactionRepository;
+    private  AccountRepository accountRepository;
+    private  TransactionRepository transactionRepository;
 
     @Override
     @Transactional
@@ -55,15 +55,14 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void saveTransaction(Account account, BigDecimal amount, TransactionType type) {
+        Transaction transaction =new  Transaction();
+        transaction.setReferenceId(UUID.randomUUID().toString());
+        transaction.setAccount(account);
+        transaction.setTransactionType(type);
+        transaction.setAmount(amount);
+        transaction.setBalanceAfter(account.getBalance());
+        transaction.setCreatedAt(LocalDateTime.now());
 
-        Transaction transaction = Transaction.builder()
-                .referenceId(UUID.randomUUID().toString())
-                .account(account)
-                .transactionType(type)
-                .amount(amount)
-                .balanceAfter(account.getBalance())
-                .createdAt(LocalDateTime.now())
-                .build();
 
         transactionRepository.save(transaction);
     }
@@ -74,13 +73,14 @@ public class TransactionServiceImpl implements TransactionService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
 
         return transactionRepository.findByAccountId(accountId, pageable)
-                .map(tx -> TransactionResponse.builder()
-                        .referenceId(tx.getReferenceId())
-                        .transactionType(tx.getTransactionType())
-                        .amount(tx.getAmount())
-                        .balanceAfter(tx.getBalanceAfter())
-                        .createdAt(tx.getCreatedAt())
-                        .build()
-                );}
-}
+                .map(t -> {   // t is the entity from repository
+                    TransactionResponse tx = new TransactionResponse();
+                    tx.setReferenceId(t.getReferenceId());
+                    tx.setTransactionType(t.getTransactionType());
+                    tx.setAmount(t.getAmount());
+                    tx.setBalanceAfter(t.getBalanceAfter());
+                    tx.setCreatedAt(t.getCreatedAt());
+                    return tx;
+                });
+}}
 

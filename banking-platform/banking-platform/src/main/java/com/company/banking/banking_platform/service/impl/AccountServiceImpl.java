@@ -10,6 +10,7 @@ import com.company.banking.banking_platform.repository.AccountRepository;
 import com.company.banking.banking_platform.repository.UserRepository;
 import com.company.banking.banking_platform.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +20,11 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
+@Autowired
+    private  AccountRepository accountRepository;
+@Autowired
+    private  UserRepository userRepository;
 
-    private final AccountRepository accountRepository;
-    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -30,12 +33,11 @@ public class AccountServiceImpl implements AccountService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        Account account = Account.builder()
-                .accountNumber(UUID.randomUUID().toString())
-                .accountType(request.getAccountType())
-                .balance(request.getInitialBalance())
-                .user(user)
-                .build();
+        Account account = new Account();
+        account.setAccountNumber(UUID.randomUUID().toString());
+        account.setAccountType(request.getAccountType());
+        account.setBalance(request.getInitialBalance());
+        account.setUser(user);
 
         return accountRepository.save(account);
     }
@@ -45,11 +47,11 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
-        return AccountSummaryResponse.builder()
-                .accountNumber(account.getAccountNumber())
-                .balance(account.getBalance())
-                .accountType(account.getAccountType().name())
-                .build();
+         AccountSummaryResponse accountSummary=new AccountSummaryResponse();
+                accountSummary.setAccountNumber(account.getAccountNumber().toString());
+                accountSummary.setBalance(account.getBalance());
+                accountSummary.setAccountType(account.getAccountType().name());
+                return accountSummary;
     }
 }
 
