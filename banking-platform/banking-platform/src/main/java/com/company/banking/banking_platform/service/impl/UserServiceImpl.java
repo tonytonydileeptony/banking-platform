@@ -4,10 +4,13 @@ package com.company.banking.banking_platform.service.impl;
 
 import com.company.banking.banking_platform.dto.CreateUserRequest;
 import com.company.banking.banking_platform.entity.User;
+import com.company.banking.banking_platform.dto.UserResponse;
 import com.company.banking.banking_platform.exception.BadRequestException;
+import com.company.banking.banking_platform.exception.ResourceNotFoundException;
 import com.company.banking.banking_platform.repository.UserRepository;
 import com.company.banking.banking_platform.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,6 +34,31 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+    @Override
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        return mapToResponse(user);
+    }
+
+    @Override
+    public Page<UserResponse> getAllUsers(int page, int size, String sortBy) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+
+        return userRepository.findAll(pageable)
+                .map(this::mapToResponse);
+    }
+
+    private UserResponse mapToResponse(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .mobile(user.getMobile())
+                .build();
     }
 }
 
