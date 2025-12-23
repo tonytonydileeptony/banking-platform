@@ -11,7 +11,7 @@ import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/accounts")
+@RequestMapping("/api/v1/users")
 
 public class UserController {
 

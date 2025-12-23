@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
                 });
 
         User user = new User();
-        user.setFullName(request.getFullName());
+        user.setUsername(request.getFullName());
         user.setEmail(request.getEmail());
         user.setMobile(request.getMobile());
 
@@ -53,12 +53,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserResponse mapToResponse(User user) {
-        UserResponse response = new UserResponse();
-        response.setId(user.getId());
-        response.setFullName(user.getFullName());
-        response.setEmail(user.getEmail());
-        response.setMobile(user.getMobile());
-   return response;
+        return UserResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .mobile(user.getMobile())
+                .build();
     }
 }
 

@@ -73,14 +73,13 @@ public class TransactionServiceImpl implements TransactionService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
 
         return transactionRepository.findByAccountId(accountId, pageable)
-                .map(t -> {   // t is the entity from repository
-                    TransactionResponse tx = new TransactionResponse();
-                    tx.setReferenceId(t.getReferenceId());
-                    tx.setTransactionType(t.getTransactionType());
-                    tx.setAmount(t.getAmount());
-                    tx.setBalanceAfter(t.getBalanceAfter());
-                    tx.setCreatedAt(t.getCreatedAt());
-                    return tx;
-                });
+                .map(t -> TransactionResponse.builder()
+                        .referenceId(t.getReferenceId())
+                        .transactionType(t.getTransactionType())
+                        .amount(t.getAmount())
+                        .balanceAfter(t.getBalanceAfter())
+                        .createdAt(t.getCreatedAt())
+                        .build()
+                );
 }}
 

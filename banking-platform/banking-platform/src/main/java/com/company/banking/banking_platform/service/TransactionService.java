@@ -13,5 +13,6 @@ public interface TransactionService {
     void withdraw(TransactionRequest request);
     Page<TransactionResponse> getTransactionHistory(
             Long accountId, int page, int size, String sortBy);
+
 }
 

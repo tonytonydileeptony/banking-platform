@@ -47,11 +47,23 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
 
-         AccountSummaryResponse accountSummary=new AccountSummaryResponse();
-                accountSummary.setAccountNumber(account.getAccountNumber().toString());
-                accountSummary.setBalance(account.getBalance());
-                accountSummary.setAccountType(account.getAccountType().name());
-                return accountSummary;
+        AccountSummaryResponse accountSummary = AccountSummaryResponse.builder()
+                .accountNumber(account.getAccountNumber().toString())
+                .balance(account.getBalance())
+                .accountType(account.getAccountType().name())
+                .build();
+
+        return accountSummary;
+    }
+
+    @Override
+    public boolean registerUser(AuthRequest req) {
+        User user= User.builder().username(req.getUsername())
+                        .password(req.getPassword())
+                .role(req.getRole()).email(req.getEmail()).mobile(req.getMobile()).build();
+
+         userRepository.save(user);
+         return true;
     }
 }
 

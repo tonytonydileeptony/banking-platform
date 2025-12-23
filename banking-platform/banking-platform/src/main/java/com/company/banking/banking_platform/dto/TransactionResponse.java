@@ -3,14 +3,18 @@ package com.company.banking.banking_platform.dto;
 
 
 import com.company.banking.banking_platform.entity.TransactionType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class TransactionResponse {
 
     private String referenceId;
@@ -19,47 +23,6 @@ public class TransactionResponse {
     private BigDecimal balanceAfter;
     private LocalDateTime createdAt;
 
-    public String getReferenceId() {
-        return referenceId;
-    }
 
-    public void setReferenceId(String referenceId) {
-        this.referenceId = referenceId;
-    }
-
-    public TransactionType getTransactionType() {
-        return transactionType;
-    }
-
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public BigDecimal getBalanceAfter() {
-        return balanceAfter;
-    }
-
-    public void setBalanceAfter(BigDecimal balanceAfter) {
-        this.balanceAfter = balanceAfter;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public TransactionResponse() {
-    }
 }
 
