@@ -2,6 +2,7 @@ package com.company.banking.banking_platform.service.impl;
 
 
 
+import com.company.banking.banking_platform.dto.AuthRequest;
 import com.company.banking.banking_platform.dto.CreateUserRequest;
 import com.company.banking.banking_platform.entity.User;
 import com.company.banking.banking_platform.dto.UserResponse;
@@ -11,6 +12,7 @@ import com.company.banking.banking_platform.repository.UserRepository;
 import com.company.banking.banking_platform.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private  UserRepository userRepository;
-
+    private PasswordEncoder passwordEncoder;
     @Override
     public User createUser(CreateUserRequest request) {
 
@@ -59,6 +61,23 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .mobile(user.getMobile())
                 .build();
+    }
+
+    public boolean registerUser(AuthRequest req) {
+
+        if (userRepository.existsByUsername(req.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        User user = new User();
+        user.setUsername(req.getUsername());
+        user.setPassword(passwordEncoder.encode(req.getPassword()));
+        user.setEmail(req.getEmail());
+        user.setMobile(req.getMobile());
+        user.setRole(req.getRole());
+
+        userRepository.save(user);
+        return true;
     }
 }
 

@@ -1,31 +1,26 @@
 package com.company.banking.banking_platform.config;
 
+
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class OpenApiConfig {
-
+public class SwaggerConfig {
     @Bean
-    public OpenAPI bankingOpenAPI() {
+    public OpenAPI openAPI() {
         return new OpenAPI()
-                .info(new Info()
-                        .title("Banking Platform API")
-                        .description("APIs for Banking Platform")
-                        .version("v1"))
-                // 🔐 Enable JWT in Swagger
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
                 .components(new Components()
                         .addSecuritySchemes("bearerAuth",
                                 new SecurityScheme()
-                                        .name("Authorization")
+                                        .name("bearerAuth")
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")));
     }
+
 }

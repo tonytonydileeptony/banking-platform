@@ -11,10 +11,12 @@ import com.company.banking.banking_platform.repository.UserRepository;
 import com.company.banking.banking_platform.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,6 +26,8 @@ public class AccountServiceImpl implements AccountService {
     private  AccountRepository accountRepository;
 @Autowired
     private  UserRepository userRepository;
+@Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -57,13 +61,27 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean registerUser(AuthRequest req) {
-        User user= User.builder().username(req.getUsername())
-                        .password(req.getPassword())
-                .role(req.getRole()).email(req.getEmail()).mobile(req.getMobile()).build();
+    public List<Account> findAll() {
+        return accountRepository.findAll();
 
-         userRepository.save(user);
-         return true;
     }
+
+    public boolean registerUser(AuthRequest req) {
+
+        if (userRepository.existsByUsername(req.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        User user = new User();
+        user.setUsername(req.getUsername());
+        user.setPassword(passwordEncoder.encode(req.getPassword()));
+        user.setEmail(req.getEmail());
+        user.setMobile(req.getMobile());
+        user.setRole(req.getRole());
+
+        userRepository.save(user);
+        return true;
+    }
+
 }
 
