@@ -9,8 +9,10 @@ import com.company.banking.banking_platform.exception.ResourceNotFoundException;
 import com.company.banking.banking_platform.repository.AccountRepository;
 import com.company.banking.banking_platform.repository.UserRepository;
 import com.company.banking.banking_platform.service.AccountService;
+import com.company.banking.banking_platform.service.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,10 +49,14 @@ public class AccountServiceImpl implements AccountService {
     }
     @Override
     public AccountSummaryResponse getAccountSummary(Long accountId) {
-
-        Account account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new ResourceNotFoundException("Account not found"));
-
+     Account account=new Account();
+        if (SecurityUtil.isAdmin()) {
+            account= accountRepository.findById(accountId)
+                    .orElseThrow(() -> new RuntimeException("Account not found"));
+        }
+        String username = SecurityUtil.getCurrentUsername();
+        account=accountRepository.findByIdAndOwnerUsername(accountId, username)
+                .orElseThrow(() -> new AccessDeniedException("Unauthorized access"));
         AccountSummaryResponse accountSummary = AccountSummaryResponse.builder()
                 .accountNumber(account.getAccountNumber().toString())
                 .balance(account.getBalance())
@@ -82,6 +88,8 @@ public class AccountServiceImpl implements AccountService {
         userRepository.save(user);
         return true;
     }
+
+
 
 }
 
